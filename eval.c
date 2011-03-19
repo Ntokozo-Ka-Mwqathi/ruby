@@ -4766,6 +4766,7 @@ static void
 rb_raise_jump(mesg)
     VALUE mesg;
 {
+    EXEC_EVENT_HOOK(RUBY_EVENT_C_RETURN, ruby_current_node, ruby_frame->self, ruby_frame->last_func, ruby_frame->last_class);
     if (ruby_frame != top_frame) {
 	PUSH_FRAME();		/* fake frame */
 	*ruby_frame = *_frame.prev->prev;
@@ -13785,6 +13786,7 @@ rb_f_catch(dmy, tag)
 	val = rb_yield_0(tag, 0, 0, 0, Qfalse);
     }
     else if (state == TAG_THROW && tag == prot_tag->dst) {
+	EXEC_EVENT_HOOK(RUBY_EVENT_C_RETURN, ruby_current_node, ruby_frame->self, ruby_frame->last_func, ruby_frame->last_class);
 	val = prot_tag->retval;
 	state = 0;
     }
